@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мои соцсети</title>
+    <title>@psychodrain</title>
     <!-- Подключаем Font Awesome для красивых иконок соцсетей -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -53,13 +53,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4); /* Полупрозрачный черный слой */
+            background: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный слой */
             z-index: -1;
         }
 
         .container {
             background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px); /* Эффект размытия фона */
+            backdrop-filter: blur(10px);
             padding: 2.5rem;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
@@ -122,19 +122,19 @@
         .tiktok { background: #000000; }
         .vkontakte { background: #4C75A3; }
         .soundcloud { background: #FF7700; }
-
-        footer {
-            margin-top: 2rem;
-            color: #999;
-            font-size: 0.9rem;
-        }
+        .twitter { background: #1DA1F2; }
     </style>
 </head>
 <body>
     <!-- Видео фон -->
     <div class="video-background">
+        <!-- Используем видео с сервера, которое точно работает -->
         <video autoplay muted loop playsinline>
-            <source src="https://videos.pexels.com/video-files/3036254/3036254-uhd_2560_1440_25fps.mp4" type="video/mp4">
+            <!-- Пробуем разные форматы -->
+            <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+            <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm">
+            <!-- Резервный текст, если видео не грузится -->
+            Твой браузер не поддерживает видео фон.
         </video>
     </div>
     <!-- Затемняющий слой -->
@@ -161,7 +161,7 @@
                 <i class="fab fa-vk"></i> ВКонтакте
             </a>
             
-            <a href="https://soundcloud.com/mishanyalirikov" target="_blank" class="social-link soundcloud">
+             <a href="https://soundcloud.com/mishanyalirikov" target="_blank" class="social-link soundcloud">
                 <i class="fab fa-soundcloud"></i> SoundCloud
             </a>
         </div>
