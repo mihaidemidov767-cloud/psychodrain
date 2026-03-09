@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@psychodrain</title>
-    <!-- Подключаем Font Awesome для красивых иконок соцсетей -->
+    <!-- Подключаем Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Подключаем CSS для YTPlayer -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.mb.YTPlayer/3.3.9/css/jquery.mb.YTPlayer.min.css">
@@ -25,43 +25,142 @@
             position: relative;
         }
 
-        /* Затемнение поверх видео для лучшей читаемости текста */
+        /* Затемнение поверх видео */
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.3);
             z-index: 1;
             pointer-events: none;
         }
 
+        /* КНОПКА ЗВУКА В ЛЕВОМ ВЕРХНЕМ УГЛУ */
+        .sound-button {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: rgba(20, 20, 30, 0.8);
+            backdrop-filter: blur(8px);
+            border: 2px solid rgba(0, 255, 255, 0.5);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 0 15px rgba(0, 255, 255, 0.5),
+                0 0 30px rgba(255, 0, 255, 0.3),
+                inset 0 0 10px rgba(255, 255, 255, 0.3);
+            animation: buttonPulse 3s ease-in-out infinite;
+        }
+
+        .sound-button:hover {
+            transform: scale(1.1);
+            border-color: rgba(255, 0, 255, 0.8);
+            box-shadow: 
+                0 0 20px rgba(255, 0, 255, 0.7),
+                0 0 40px rgba(0, 255, 255, 0.5);
+        }
+
+        .sound-button i {
+            filter: drop-shadow(0 0 5px currentColor);
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; box-shadow: 0 0 25px rgba(0, 255, 255, 0.8), 0 0 50px rgba(255, 0, 255, 0.5); }
+        }
+
+        /* Неоновая панелька */
         .container {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
+            background: rgba(20, 20, 30, 0.75);
+            backdrop-filter: blur(12px);
             padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 30px;
             text-align: center;
-            max-width: 400px;
+            max-width: 420px;
             width: 90%;
             margin: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
             z-index: 2;
+            
+            /* НЕОНОВОЕ СВЕЧЕНИЕ */
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 255, 0.3),
+                0 0 40px rgba(255, 0, 255, 0.2),
+                0 0 60px rgba(0, 255, 255, 0.1),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+            
+            /* Анимация смены цветов */
+            animation: neonGlow 8s ease-in-out infinite;
+        }
+
+        /* Анимация для неонового свечения */
+        @keyframes neonGlow {
+            0% {
+                box-shadow: 
+                    0 0 20px rgba(0, 255, 255, 0.4),
+                    0 0 40px rgba(255, 0, 255, 0.3),
+                    0 0 60px rgba(0, 255, 255, 0.2),
+                    inset 0 0 20px rgba(255, 255, 255, 0.2);
+                border-color: rgba(0, 255, 255, 0.3);
+            }
+            25% {
+                box-shadow: 
+                    0 0 20px rgba(255, 0, 255, 0.4),
+                    0 0 40px rgba(0, 255, 255, 0.3),
+                    0 0 60px rgba(255, 0, 255, 0.2),
+                    inset 0 0 20px rgba(255, 255, 255, 0.2);
+                border-color: rgba(255, 0, 255, 0.3);
+            }
+            50% {
+                box-shadow: 
+                    0 0 20px rgba(0, 255, 150, 0.4),
+                    0 0 40px rgba(255, 150, 0, 0.3),
+                    0 0 60px rgba(0, 255, 150, 0.2),
+                    inset 0 0 20px rgba(255, 255, 255, 0.2);
+                border-color: rgba(0, 255, 150, 0.3);
+            }
+            75% {
+                box-shadow: 
+                    0 0 20px rgba(150, 0, 255, 0.4),
+                    0 0 40px rgba(255, 150, 0, 0.3),
+                    0 0 60px rgba(150, 0, 255, 0.2),
+                    inset 0 0 20px rgba(255, 255, 255, 0.2);
+                border-color: rgba(150, 0, 255, 0.3);
+            }
+            100% {
+                box-shadow: 
+                    0 0 20px rgba(0, 255, 255, 0.4),
+                    0 0 40px rgba(255, 0, 255, 0.3),
+                    0 0 60px rgba(0, 255, 255, 0.2),
+                    inset 0 0 20px rgba(255, 255, 255, 0.2);
+                border-color: rgba(0, 255, 255, 0.3);
+            }
         }
 
         h1 {
-            color: #333;
+            color: white;
             margin-bottom: 0.5rem;
             font-size: 2.2rem;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
         }
 
         p {
-            color: #666;
+            color: rgba(255, 255, 255, 0.8);
             margin-bottom: 2rem;
             font-size: 1.1rem;
+            text-shadow: 0 0 5px rgba(255, 0, 255, 0.3);
         }
 
         .social-links {
@@ -83,57 +182,56 @@
             font-weight: 600;
             font-size: 1.2rem;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(5px);
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
         }
 
         .social-link:hover {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            filter: brightness(1.1);
+            box-shadow: 0 0 25px currentColor;
+            filter: brightness(1.2);
+            border-color: white;
         }
 
         .social-link i {
             font-size: 1.5rem;
+            filter: drop-shadow(0 0 5px currentColor);
         }
 
-        /* Индивидуальные цвета соцсетей */
-        .instagram { background: #E4405F; }
-        .telegram { background: #0088cc; }
-        .youtube { background: #FF0000; }
-        .github { background: #333; }
-        .tiktok { background: #000000; }
-        .vkontakte { background: #4C75A3; }
-        .soundcloud { background: #FF7700; }
-        .twitter { background: #1DA1F2; }
+        /* Индивидуальные цвета соцсетей с неоном */
+        .telegram { background: #0088cc; box-shadow: 0 0 20px #0088cc; }
+        .youtube { background: #FF0000; box-shadow: 0 0 20px #FF0000; }
+        .tiktok { background: #000000; box-shadow: 0 0 20px #ff00ff; }
+        .vkontakte { background: #4C75A3; box-shadow: 0 0 20px #4C75A3; }
+        .soundcloud { background: #FF7700; box-shadow: 0 0 20px #FF7700; }
 
-        /* Стили для контроллера громкости */
+        /* Стили для контроллера громкости (теперь в углу только кнопка, слайдер убрали) */
         .volume-control {
             margin-top: 1.5rem;
             padding: 1rem;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50px;
             display: flex;
             align-items: center;
             gap: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
         }
 
         .volume-control i {
-            color: #333;
+            color: white;
             font-size: 1.2rem;
             width: 24px;
-        }
-
-        .volume-control i.fa-volume-high {
-            color: #0088cc;
+            filter: drop-shadow(0 0 5px cyan);
         }
 
         .volume-slider {
             flex: 1;
             height: 6px;
             -webkit-appearance: none;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             outline: none;
         }
@@ -142,51 +240,26 @@
             -webkit-appearance: none;
             width: 18px;
             height: 18px;
-            background: #0088cc;
+            background: cyan;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s;
             border: 2px solid white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 0 15px cyan;
         }
 
         .volume-slider::-webkit-slider-thumb:hover {
             transform: scale(1.15);
-            background: #0066a0;
-        }
-
-        .volume-slider::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
-            background: #0088cc;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid white;
+            background: magenta;
+            box-shadow: 0 0 20px magenta;
         }
 
         .volume-percent {
             min-width: 45px;
-            color: #333;
+            color: white;
             font-weight: 600;
             font-size: 0.9rem;
-        }
-
-        /* Кнопка mute */
-        .mute-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-            color: #333;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .mute-btn:hover {
-            color: #0088cc;
-            transform: scale(1.1);
+            text-shadow: 0 0 5px cyan;
         }
     </style>
 </head>
@@ -196,7 +269,7 @@
         videoURL: 'https://www.youtube.com/watch?v=WPxd8Ng9-x0',
         containment: 'body',
         autoPlay: true,
-        mute: false,        // ЗВУК ВКЛЮЧЕН (было true, стало false)
+        mute: false,
         startAt: 0,
         opacity: 1,
         loop: true,
@@ -207,11 +280,16 @@
         optimizeDisplay: true,
         stopMovieOnBlur: false,
         realfullscreen: true,
-        volume: 50           // Начальная громкость 50%
+        volume: 50
     }"></div>
 
     <!-- Затемняющий слой -->
     <div class="overlay"></div>
+
+    <!-- КНОПКА ЗВУКА В ЛЕВОМ ВЕРХНЕМ УГЛУ -->
+    <button class="sound-button" id="soundToggle">
+        <i class="fas fa-volume-high" id="soundIcon"></i>
+    </button>
 
     <div class="container">
         <h1>Связь</h1>
@@ -239,11 +317,9 @@
             </a>
         </div>
 
-        <!-- ПОЛЗУНОК ГРОМКОСТИ -->
+        <!-- ПОЛЗУНОК ГРОМКОСТИ (оставил на месте, но можно скрыть если не нужен) -->
         <div class="volume-control">
-            <button class="mute-btn" id="muteBtn">
-                <i class="fas fa-volume-high" id="volumeIcon"></i>
-            </button>
+            <i class="fas fa-volume-high" id="volumeIcon"></i>
             <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50">
             <span class="volume-percent" id="volumePercent">50%</span>
         </div>
@@ -256,81 +332,106 @@
     <script>
         $(document).ready(function() {
             // Активируем YouTube плеер
-            const player = $(".ytplayer").YTPlayer();
+            $(".ytplayer").YTPlayer();
             
             // Даем время на загрузку плеера
             setTimeout(() => {
-                // Устанавливаем громкость при загрузке
-                const ytPlayer = $(".ytplayer").data("ytPlayer").player;
+                // Работа с кнопкой в углу и ползунком
+                initVolumeControl();
+            }, 1500);
+
+            function initVolumeControl() {
+                const ytPlayer = $(".ytplayer").data("ytPlayer");
+                if (!ytPlayer || !ytPlayer.player) {
+                    setTimeout(initVolumeControl, 500);
+                    return;
+                }
+
+                const player = ytPlayer.player;
                 
-                if (ytPlayer && ytPlayer.setVolume) {
-                    ytPlayer.setVolume(50);
-                }
-            }, 1000);
+                // Элементы управления
+                const soundToggle = document.getElementById('soundToggle');
+                const soundIcon = document.getElementById('soundIcon');
+                const volumeSlider = document.getElementById('volumeSlider');
+                const volumePercent = document.getElementById('volumePercent');
+                const volumeIcon = document.getElementById('volumeIcon');
+                
+                let lastVolume = 50;
+                let isMuted = false;
 
-            // Работа с ползунком громкости
-            const volumeSlider = document.getElementById('volumeSlider');
-            const volumePercent = document.getElementById('volumePercent');
-            const volumeIcon = document.getElementById('volumeIcon');
-            const muteBtn = document.getElementById('muteBtn');
-            
-            let lastVolume = 50; // Запоминаем последнюю громкость
-
-            // Функция обновления иконки
-            function updateVolumeIcon(volume) {
-                if (volume == 0) {
-                    volumeIcon.className = 'fas fa-volume-mute';
-                } else if (volume < 30) {
-                    volumeIcon.className = 'fas fa-volume-low';
-                } else {
-                    volumeIcon.className = 'fas fa-volume-high';
+                // Устанавливаем начальную громкость
+                if (player.setVolume) {
+                    player.setVolume(50);
                 }
+
+                // Функция обновления иконок
+                function updateIcons(volume) {
+                    // Иконка в углу
+                    if (volume == 0) {
+                        soundIcon.className = 'fas fa-volume-mute';
+                        volumeIcon.className = 'fas fa-volume-mute';
+                    } else if (volume < 30) {
+                        soundIcon.className = 'fas fa-volume-low';
+                        volumeIcon.className = 'fas fa-volume-low';
+                    } else {
+                        soundIcon.className = 'fas fa-volume-high';
+                        volumeIcon.className = 'fas fa-volume-high';
+                    }
+                }
+
+                // Обработка ползунка
+                volumeSlider.addEventListener('input', function(e) {
+                    const volume = parseInt(e.target.value);
+                    volumePercent.textContent = volume + '%';
+                    
+                    if (player.setVolume) {
+                        player.setVolume(volume);
+                    }
+                    
+                    updateIcons(volume);
+                    
+                    if (volume > 0) {
+                        lastVolume = volume;
+                        isMuted = false;
+                    }
+                });
+
+                // КНОПКА В УГЛУ - ТЕПЕРЬ РАБОТАЕТ!
+                soundToggle.addEventListener('click', function() {
+                    if (!player.getVolume) return;
+                    
+                    const currentVolume = player.getVolume();
+                    
+                    if (currentVolume > 0) {
+                        // Выключаем звук
+                        lastVolume = currentVolume;
+                        player.setVolume(0);
+                        volumeSlider.value = 0;
+                        volumePercent.textContent = '0%';
+                        updateIcons(0);
+                        isMuted = true;
+                    } else {
+                        // Включаем звук
+                        player.setVolume(lastVolume);
+                        volumeSlider.value = lastVolume;
+                        volumePercent.textContent = lastVolume + '%';
+                        updateIcons(lastVolume);
+                        isMuted = false;
+                    }
+                });
+
+                // Следим за изменениями громкости
+                setInterval(() => {
+                    if (player.getVolume) {
+                        const vol = player.getVolume();
+                        if (vol !== parseInt(volumeSlider.value)) {
+                            volumeSlider.value = vol;
+                            volumePercent.textContent = vol + '%';
+                            updateIcons(vol);
+                        }
+                    }
+                }, 100);
             }
-
-            // Изменение громкости ползунком
-            volumeSlider.addEventListener('input', function(e) {
-                const volume = parseInt(e.target.value);
-                volumePercent.textContent = volume + '%';
-                
-                // Обновляем иконку
-                updateVolumeIcon(volume);
-                
-                // Меняем громкость видео
-                const ytPlayer = $(".ytplayer").data("ytPlayer");
-                if (ytPlayer && ytPlayer.player && ytPlayer.player.setVolume) {
-                    ytPlayer.player.setVolume(volume);
-                }
-                
-                // Запоминаем последнюю громкость для mute
-                if (volume > 0) {
-                    lastVolume = volume;
-                }
-            });
-
-            // Кнопка mute/unmute
-            muteBtn.addEventListener('click', function() {
-                const ytPlayer = $(".ytplayer").data("ytPlayer");
-                if (!ytPlayer || !ytPlayer.player || !ytPlayer.player.getVolume) return;
-                
-                const currentVolume = ytPlayer.player.getVolume();
-                
-                if (currentVolume > 0) {
-                    // Выключаем звук
-                    lastVolume = currentVolume;
-                    ytPlayer.player.setVolume(0);
-                    volumeSlider.value = 0;
-                    volumePercent.textContent = '0%';
-                    updateVolumeIcon(0);
-                } else {
-                    // Включаем звук
-                    ytPlayer.player.setVolume(lastVolume);
-                    volumeSlider.value = lastVolume;
-                    volumePercent.textContent = lastVolume + '%';
-                    updateVolumeIcon(lastVolume);
-                }
-            });
-
-            // Можно добавить кнопки для переключения видео (по желанию)
         });
     </script>
 </body>
