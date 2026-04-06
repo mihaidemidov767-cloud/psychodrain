@@ -473,6 +473,9 @@ textarea.form-input { resize: vertical; min-height: 70px; }
     color: var(--primary);
     margin-bottom: 4px;
 }
+.admin-section {
+    margin-top: 100px;
+    padding-bottom: 60px;
 .about-stats .stat-label {
     font-size: 13px;
     color: var(--text-light);
