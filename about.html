@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>О нас — Лоскут Весовой</title>
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/open-sans@4.5.14/index.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat@4.5.14/index.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- Header (такой же, как в index.html) -->
+<header class="header" id="header">
+    <div class="header-inner">
+        <a href="index.html" class="logo">
+            <div class="logo-icon">✂</div>
+            <div class="logo-text">Лоскут <span>Весовой</span></div>
+        </a>
+        <nav class="nav">
+            <a href="index.html" class="nav-link">Каталог</a>
+            <a href="about.html" class="nav-link active">О нас</a>
+            <a href="index.html#admin" class="nav-link" id="nav-admin-link">Админ</a>
+            <button class="cart-btn" onclick="toggleCart()">
+                🛒 Корзина
+                <span class="cart-badge" id="cartBadge" style="display:none">0</span>
+            </button>
+        </nav>
+    </div>
+</header>
+
+<!-- About Content -->
+<main class="about-page">
+    <section class="section">
+        <div class="section-header">
+            <h2>О магазине «Лоскут Весовой»</h2>
+            <p>Мы продаём качественные ткани на вес с 2019 года</p>
+        </div>
+        
+        <div class="about-container">
+            <img src="https://image.qwenlm.ai/public_source/76bb5dd4-4f72-4671-b805-d03a52364dad/1494b6eea-ac2d-4dbd-a300-8e0dd8432d26.png" 
+                 alt="Наш магазин" class="about-image">
+            
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3>🎯 Наша миссия</h3>
+                    <p>Сделать качественные ткани доступными для каждого. Мы работаем напрямую с фабриками и предлагаем лучшие цены без потери качества.</p>
+                </div>
+                <div class="about-card">
+                    <h3>🌟 Наши ценности</h3>
+                    <p>Качество, честность и забота о клиенте — три столпа нашей работы. Каждая ткань тщательно проверяется перед отправкой.</p>
+                </div>
+                <div class="about-card">
+                    <h3>📦 Как мы работаем</h3>
+                    <p>Вы выбираете ткань, указываете нужный вес в килограммах, оформляете заказ — мы отправляем в течение 1-2 дней.</p>
+                </div>
+                <div class="about-card">
+                    <h3>🌱 Экологичность</h3>
+                    <p>Мы стараемся минимизировать отходы: продаём ткани на вес, используем перерабатываемую упаковку.</p>
+                </div>
+            </div>
+
+            <div class="contacts-card">
+                <h3>📞 Контакты</h3>
+                <div class="contacts-grid">
+                    <div><strong>📍 Адрес:</strong> г. Москва, ул. Ткацкая, д. 15</div>
+                    <div><strong>📞 Телефон:</strong> +7 (495) 123-45-67</div>
+                    <div><strong>✉️ Email:</strong> info@loskut-vesovoy.ru</div>
+                    <div><strong>🕐 Режим работы:</strong> Пн-Сб: 9:00 - 20:00</div>
+                </div>
+            </div>
+
+            <div class="about-stats">
+                <div class="stat-item">
+                    <span class="stat-number">5+</span>
+                    <span class="stat-label">лет на рынке</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">видов тканей</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">2000+</span>
+                    <span class="stat-label">довольных клиентов</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">повторных покупок</span>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer (такой же, как в index.html) -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <h3>✂ Лоскут Весовой</h3>
+            <p>Качественные ткани на вес для шитья, декора и творчества. Работаем с 2019 года.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Каталог</h4>
+            <a href="index.html">Все ткани</a>
+            <a href="index.html?cat=cotton">Хлопок</a>
+            <a href="index.html?cat=linen">Лён</a>
+            <a href="index.html?cat=silk">Шёлк</a>
+        </div>
+        <div class="footer-col">
+            <h4>Информация</h4>
+            <a href="about.html" class="active">О нас</a>
+            <a href="#">Доставка</a>
+            <a href="#">Возврат</a>
+        </div>
+        <div class="footer-col">
+            <h4>Контакты</h4>
+            <a>+7 (495) 123-45-67</a>
+            <a>info@loskut-vesovoy.ru</a>
+            <a>г. Москва</a>
+        </div>
+    </div>
+    <div class="footer-bottom">© 2024 Лоскут Весовой. Все права защищены.</div>
+</footer>
+
+<!-- Cart Sidebar (общий для всех страниц) -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+        <h3>🛒 Корзина</h3>
+        <button class="cart-close" onclick="toggleCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+        <div class="cart-total">
+            <span class="cart-total-label">Итого:</span>
+            <span class="cart-total-value" id="cartTotal">0 ₽</span>
+        </div>
+        <button class="checkout-btn" onclick="openCheckout()">Оформить заказ</button>
+    </div>
+</div>
+
+<!-- Toast Notifications -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/script.js"></script>
+<script>
+    // Инициализация для страницы О нас
+    document.addEventListener('DOMContentLoaded', () => {
+        // Подсветка активной ссылки
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+        document.querySelector('a[href="about.html"]')?.classList.add('active');
+        
+        // Инициализация корзины (если функция есть в script.js)
+        if (typeof updateCartUI === 'function') {
+            updateCartUI();
+        }
+    });
+</script>
+</body>
+</html>
