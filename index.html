@@ -3,204 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@psychodrain</title>
-    <!-- Подключаем Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Подключаем CSS для YTPlayer -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.mb.YTPlayer/3.3.9/css/jquery.mb.YTPlayer.min.css">
-    <style>
-        /* Стили для страницы */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            background: #000;
-        }
-
-        /* Затемнение поверх видео */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        /* ПАНЕЛЬКА */
-        .container {
-            background: rgba(10, 10, 15, 0.85);
-            backdrop-filter: blur(12px);
-            padding: 2.5rem 2rem;
-            border-radius: 35px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            margin: 20px;
-            position: relative;
-            z-index: 2;
-            
-            /* БЕЛОЕ НЕОНОВОЕ СВЕЧЕНИЕ */
-            border: 1.5px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 
-                0 0 40px rgba(255, 255, 255, 0.4),
-                0 0 80px rgba(255, 255, 255, 0.2),
-                0 0 120px rgba(255, 255, 255, 0.1),
-                inset 0 0 30px rgba(255, 255, 255, 0.2);
-            
-            /* Анимация пульсации */
-            animation: neonPulse 3s ease-in-out infinite;
-        }
-
-        @keyframes neonPulse {
-            0%, 100% {
-                box-shadow: 
-                    0 0 40px rgba(255, 255, 255, 0.4),
-                    0 0 80px rgba(255, 255, 255, 0.2),
-                    0 0 120px rgba(255, 255, 255, 0.1),
-                    inset 0 0 30px rgba(255, 255, 255, 0.2);
-            }
-            50% {
-                box-shadow: 
-                    0 0 60px rgba(255, 255, 255, 0.7),
-                    0 0 120px rgba(255, 255, 255, 0.4),
-                    0 0 180px rgba(255, 255, 255, 0.2),
-                    inset 0 0 40px rgba(255, 255, 255, 0.3);
-            }
-        }
-
-        h1 {
-            color: white;
-            margin-bottom: 1.8rem;
-            font-size: 2.1rem;
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
-            letter-spacing: 1.5px;
-            font-weight: 600;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding-bottom: 0.8rem;
-        }
-
-        .social-links {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-        }
-
-        .social-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 1rem 1.2rem;
-            border-radius: 50px;
-            text-decoration: none;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(5px);
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-            
-            /* БЕЛОЕ НЕОНОВОЕ СВЕЧЕНИЕ ДЛЯ КНОПОК */
-            box-shadow: 
-                0 0 15px rgba(255, 255, 255, 0.2),
-                0 0 30px rgba(255, 255, 255, 0.1);
-        }
-
-        .social-link:hover {
-            transform: translateY(-4px) scale(1.03);
-            box-shadow: 
-                0 0 30px rgba(255, 255, 255, 0.6),
-                0 0 60px rgba(255, 255, 255, 0.3);
-            filter: brightness(1.3);
-            border-color: rgba(255, 255, 255, 0.6);
-        }
-
-        .social-link i {
-            font-size: 1.4rem;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
-        }
-
-        /* Индивидуальные цвета соцсетей */
-        .telegram { background: linear-gradient(135deg, #0088cc, #006699); }
-        .youtube { background: linear-gradient(135deg, #FF0000, #CC0000); }
-        .tiktok { background: linear-gradient(135deg, #000000, #1a1a1a); }
-        .vkontakte { background: linear-gradient(135deg, #4C75A3, #3a5a7a); }
-        .soundcloud { background: linear-gradient(135deg, #FF7700, #CC5500); }
-        .discord { background: linear-gradient(135deg, #5865F2, #4752C4); }
-    </style>
+    <title>Лоскут Весовой — Ткани на любой вкус</title>
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/open-sans@4.5.14/index.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat@4.5.14/index.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- YouTube фон со звуком 30% -->
-    <div class="ytplayer" data-property="{
-        videoURL: 'https://www.youtube.com/watch?v=WPxd8Ng9-x0',
-        containment: 'body',
-        autoPlay: true,
-        mute: false,           /* ЗВУК ВКЛЮЧЕН */
-        startAt: 0,
-        opacity: 1,
-        loop: true,
-        showControls: false,
-        showYTLogo: false,
-        addRaster: false,
-        quality: 'hd1080',
-        optimizeDisplay: true,
-        stopMovieOnBlur: false,
-        realfullscreen: true,
-        volume: 30              /* ГРОМКОСТЬ 30% */
-    }"></div>
 
-    <!-- Затемняющий слой -->
-    <div class="overlay"></div>
+<!-- Header -->
+<header class="header" id="header">
+    <div class="header-inner">
+        <a href="#" class="logo" onclick="showPage('catalog')">
+            <div class="logo-icon">✂</div>
+            <div class="logo-text">Лоскут <span>Весовой</span></div>
+        </a>
+        <nav class="nav">
+            <button class="nav-link active" onclick="showPage('catalog')" id="nav-catalog">Каталог</button>
+            <button class="nav-link" onclick="showPage('about')" id="nav-about">О нас</button>
+            <button class="nav-link" onclick="showPage('admin')" id="nav-admin">Админ</button>
+            <button class="cart-btn" onclick="toggleCart()">
+                🛒 Корзина
+                <span class="cart-badge" id="cartBadge" style="display:none">0</span>
+            </button>
+        </nav>
+    </div>
+</header>
 
-    <!-- ПАНЕЛЬКА (БЕЗ КНОПКИ) -->
-    <div class="container">
-        <h1>@psychodrain</h1>
-
-        <div class="social-links">
-            <a href="https://t.me/psychodrain" target="_blank" class="social-link telegram">
-                <i class="fab fa-telegram-plane"></i> Telegram
-            </a>
-            <a href="https://discord.gg/2uCxKJwa" target="_blank" class="social-link discord">
-    <i class="fab fa-discord"></i> Discord
-</a>
-            
-            <a href="https://www.youtube.com/@mishanya_atarax" target="_blank" class="social-link youtube">
-                <i class="fab fa-youtube"></i> YouTube
-            </a>
-            
-            <a href="https://tiktok.com/@kaceiiii" target="_blank" class="social-link tiktok">
-                <i class="fab fa-tiktok"></i> TikTok
-            </a>
-            
-            <a href="https://soundcloud.com/mishanyalirikov" target="_blank" class="social-link soundcloud">
-                <i class="fab fa-soundcloud"></i> SoundCloud
-            </a>
+<!-- Hero -->
+<section class="hero" id="hero-section">
+    <div class="hero-inner">
+        <div class="hero-content">
+            <h1>Ткани <span>на вес</span> для ваших идей</h1>
+            <p>Качественные ткани от лучших производителей по доступным ценам. Хлопок, лён, шёлк, бархат и многое другое — всё в одном месте.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="showPage('catalog')">🧵 Перейти в каталог</button>
+                <button class="btn-secondary" onclick="showPage('about')">О магазине</button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item"><div class="stat-number">500+</div><div class="stat-label">Видов тканей</div></div>
+                <div class="stat-item"><div class="stat-number">2000+</div><div class="stat-label">Довольных клиентов</div></div>
+                <div class="stat-item"><div class="stat-number">5 лет</div><div class="stat-label">На рынке</div></div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="https://image.qwenlm.ai/public_source/76bb5dd4-4f72-4671-b805-d03a52364dad/100a3c32a-c3f6-46ad-b2ae-1c4dc90c22da.png" alt="Ткани">
         </div>
     </div>
+</section>
 
-    <!-- Подключаем jQuery и YTPlayer -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mb.YTPlayer/3.3.9/jquery.mb.YTPlayer.min.js"></script>
-    
-    <script>
-        $(document).ready(function() {
-            // Просто активируем плеер, ничего лишнего
-            $(".ytplayer").YTPlayer();
-            console.log("🎬 Видео запущено со звуком 30%");
-        });
-    </script>
+<!-- Catalog Page -->
+<div id="page-catalog">
+    <section class="section">
+        <div class="section-header">
+            <h2>Наш каталог</h2>
+            <p>Выберите ткань для вашего проекта. Все ткани продаются на вес — от 100 грамм.</p>
+        </div>
+        <div class="categories" id="categories"></div>
+        <div class="products-grid" id="productsGrid"></div>
+    </section>
+    <section class="features">
+        <div class="section-header">
+            <h2>Почему выбирают нас</h2>
+            <p>Мы заботимся о качестве и комфорте наших клиентов</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card"><div class="feature-icon">🚚</div><h3>Быстрая доставка</h3><p>Отправляем заказы в течение 1-2 рабочих дней по всей России</p></div>
+            <div class="feature-card"><div class="feature-icon">✅</div><h3>Гарантия качества</h3><p>Все ткани проходят проверку качества перед отправкой</p></div>
+            <div class="feature-card"><div class="feature-icon">💰</div><h3>Лучшие цены</h3><p>Прямые поставки от производителей без посредников</p></div>
+            <div class="feature-card"><div class="feature-icon">💬</div><h3>Поддержка 24/7</h3><p>Всегда на связи — поможем с выбором ткани</p></div>
+        </div>
+    </section>
+</div>
+
+<!-- About Page -->
+<div id="page-about" class="page-hidden">
+    <section class="section">
+        <div class="section-header">
+            <h2>О магазине «Лоскут Весовой»</h2>
+            <p>Мы продаём качественные ткани на вес с 2019 года</p>
+        </div>
+        <div style="max-width: 800px; margin: 0 auto;">
+            <img src="https://image.qwenlm.ai/public_source/76bb5dd4-4f72-4671-b805-d03a52364dad/1494b6eea-ac2d-4dbd-a300-8e0dd8432d26.png" alt="Магазин" class="about-image">
+            <div class="about-grid">
+                <div class="about-card">
+                    <h3>🎯 Наша миссия</h3>
+                    <p>Сделать качественные ткани доступными для каждого. Мы работаем напрямую с фабриками и предлагаем лучшие цены без потери качества.</p>
+                </div>
+                <div class="about-card">
+                    <h3>🌟 Наши ценности</h3>
+                    <p>Качество, честность и забота о клиенте — три столпа нашей работы. Каждая ткань тщательно проверяется перед отправкой.</p>
+                </div>
+            </div>
+            <div class="contacts-card">
+                <h3>📞 Контакты</h3>
+                <div class="contacts-grid">
+                    <div>📍 г. Москва, ул. Ткацкая, д. 15</div>
+                    <div>📞 +7 (495) 123-45-67</div>
+                    <div>✉️ info@loskut-vesovoy.ru</div>
+                    <div>🕐 Пн-Сб: 9:00 - 20:00</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Admin Page -->
+<div id="page-admin" class="page-hidden">
+    <div class="admin-section visible" id="adminContent">
+        <div class="admin-header">
+            <h2>📋 Панель администратора</h2>
+            <div class="admin-actions">
+                <button class="btn-primary btn-small" onclick="exportOrders()">📥 Экспорт</button>
+                <button class="btn-secondary btn-small danger" onclick="clearAllOrders()">🗑 Очистить</button>
+            </div>
+        </div>
+        <div class="admin-stats" id="adminStats"></div>
+        <div class="orders-table-wrapper">
+            <table class="orders-table" id="ordersTable">
+                <thead>
+                    <tr><th>№</th><th>Дата</th><th>Имя</th><th>Телефон</th><th>Товары</th><th>Сумма</th><th>Статус</th><th>Действия</th></tr>
+                </thead>
+                <tbody id="ordersBody"></tbody>
+            </table>
+            <div class="no-orders" id="noOrders" style="display: none;">
+                <div class="no-orders-icon">📭</div>
+                <h3>Заказов пока нет</h3>
+                <p>Когда клиенты начнут оформлять заказы, они появятся здесь</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer" id="footer">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <h3>✂ Лоскут Весовой</h3>
+            <p>Качественные ткани на вес для шитья, декора и творчества. Работаем с 2019 года.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Каталог</h4>
+            <a onclick="filterProducts('all')">Все ткани</a>
+            <a onclick="filterProducts('cotton')">Хлопок</a>
+            <a onclick="filterProducts('linen')">Лён</a>
+            <a onclick="filterProducts('silk')">Шёлк</a>
+        </div>
+        <div class="footer-col">
+            <h4>Информация</h4>
+            <a onclick="showPage('about')">О нас</a>
+            <a>Доставка</a>
+            <a>Возврат</a>
+        </div>
+        <div class="footer-col">
+            <h4>Контакты</h4>
+            <a>+7 (495) 123-45-67</a>
+            <a>info@loskut-vesovoy.ru</a>
+            <a>г. Москва</a>
+        </div>
+    </div>
+    <div class="footer-bottom">© 2024 Лоскут Весовой. Все права защищены.</div>
+</footer>
+
+<!-- Cart Sidebar -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+        <h3>🛒 Корзина</h3>
+        <button class="cart-close" onclick="toggleCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-footer" id="cartFooter" style="display:none;">
+        <div class="cart-total">
+            <span class="cart-total-label">Итого:</span>
+            <span class="cart-total-value" id="cartTotal">0 ₽</span>
+        </div>
+        <button class="checkout-btn" onclick="openCheckout()">Оформить заказ</button>
+    </div>
+</div>
+
+<!-- Product Popup Modal -->
+<div class="modal-overlay" id="productModal">
+    <div class="modal modal-product">
+        <div class="modal-header">
+            <h3 id="modalProductTitle">Товар</h3>
+            <button class="modal-close" onclick="closeProductModal()">✕</button>
+        </div>
+        <div class="modal-body" id="modalProductBody"></div>
+    </div>
+</div>
+
+<!-- Checkout Modal -->
+<div class="modal-overlay" id="checkoutModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Оформление заказа</h3>
+            <button class="modal-close" onclick="closeCheckout()">✕</button>
+        </div>
+        <div class="modal-body" id="checkoutBody">
+            <div class="order-summary" id="orderSummary"></div>
+            <form id="orderForm" onsubmit="submitOrder(event)">
+                <div class="form-group">
+                    <label class="form-label">Имя *</label>
+                    <input type="text" class="form-input" id="customerName" required placeholder="Ваше имя">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Телефон *</label>
+                        <input type="tel" class="form-input" id="customerPhone" required placeholder="+7 (___) ___-__-__">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" id="customerEmail" placeholder="email@example.com">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Город *</label>
+                    <input type="text" class="form-input" id="customerCity" required placeholder="Ваш город">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Адрес доставки *</label>
+                    <input type="text" class="form-input" id="customerAddress" required placeholder="Улица, дом, квартира">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Комментарий</label>
+                    <textarea class="form-input" id="customerComment" placeholder="Дополнительные пожелания..."></textarea>
+                </div>
+                <button type="submit" class="submit-order-btn">✅ Подтвердить заказ</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notifications -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="js/script.js"></script>
 </body>
 </html>
