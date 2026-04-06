@@ -117,7 +117,7 @@ function filterProducts(category) {
     renderCategories();
     renderProducts();
     showPage('catalog');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.querySelector('.section-header')?.scrollIntoView({ behavior: 'smooth' });
 }
 
 // ===== PRODUCTS =====
