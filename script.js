@@ -66,18 +66,12 @@ function init() {
     if (!localStorage.getItem('lv_products')) localStorage.setItem('lv_products', JSON.stringify(products));
     if (!localStorage.getItem('lv_orders')) localStorage.setItem('lv_orders', JSON.stringify([]));
     
-    // Рендерим только если мы на главной странице и есть контейнер
     if (document.getElementById('productsGrid')) {
         renderCategories();
         renderProducts();
     }
     updateCartUI();
     setupPhoneInput();
-}
-
-// ===== NAVIGATION =====
-function showPage(pageId) {
-    if (pageId === 'catalog') window.location.href = 'index.html';
 }
 
 // ===== PRODUCTS LOGIC =====
@@ -93,24 +87,18 @@ function filterProducts(category) {
     currentCategory = category;
     renderCategories();
     renderProducts();
-    
     const header = document.querySelector('.section-header');
-    if (header) {
-        setTimeout(() => header.scrollIntoView({ behavior: 'smooth' }), 50);
-    }
+    if (header) setTimeout(() => header.scrollIntoView({ behavior: 'smooth' }), 50);
 }
 
 function renderProducts() {
     const container = document.getElementById('productsGrid');
     if (!container) return;
-
     const filtered = currentCategory === 'all' ? products : products.filter(p => p.category === currentCategory);
-
     if (filtered.length === 0) {
         container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-light);">В этой категории пока нет товаров</div>';
         return;
     }
-
     container.innerHTML = filtered.map(product => `
         <div class="product-card" onclick="openProductModal(${product.id})">
             <div class="product-image">
@@ -130,53 +118,31 @@ function renderProducts() {
     `).join('');
 }
 
-function getBadgeText(badge) {
-    return { 'new': 'Новинка', 'sale': 'Скидка', 'hit': 'Хит' }[badge] || '';
-}
+function getBadgeText(badge) { return { 'new': 'Новинка', 'sale': 'Скидка', 'hit': 'Хит' }[badge] || ''; }
 
 // ===== PRODUCT MODAL =====
 function openProductModal(productId) {
     currentProduct = products.find(p => p.id === productId);
     if (!currentProduct) return;
-
     const modal = document.getElementById('productModal');
     if (!modal) return;
-
     const isFav = favorites.includes(currentProduct.id);
-    
     document.getElementById('modalProductTitle').textContent = currentProduct.name;
     document.getElementById('modalProductBody').innerHTML = `
         <div class="pd-grid">
             <div>
-                <div class="pd-main-image">
-                    <img src="${currentProduct.image}" alt="${currentProduct.name}" id="pdMainImage">
-                </div>
-                <div class="pd-thumbnails">
-                    ${currentProduct.gallery.map((img, i) => `
-                        <div class="pd-thumb ${i === 0 ? 'active' : ''}" onclick="changeModalImage('${img}', this)">
-                            <img src="${img}" alt="Превью">
-                        </div>
-                    `).join('')}
-                </div>
+                <div class="pd-main-image"><img src="${currentProduct.image}" alt="${currentProduct.name}" id="pdMainImage"></div>
+                <div class="pd-thumbnails">${currentProduct.gallery.map((img, i) => `<div class="pd-thumb ${i===0?'active':''}" onclick="changeModalImage('${img}',this)"><img src="${img}" alt="Превью"></div>`).join('')}</div>
             </div>
             <div class="pd-info">
                 <span class="pd-category">${currentProduct.categoryName}</span>
                 ${currentProduct.badge ? `<span class="product-badge badge-${currentProduct.badge}" style="position:static;display:inline-block;margin-left:8px;">${getBadgeText(currentProduct.badge)}</span>` : ''}
                 <h2 class="pd-name">${currentProduct.name}</h2>
-                <div class="pd-rating">
-                    <span class="pd-stars">${getStarsHtml(currentProduct.rating)}</span>
-                    <span>${currentProduct.rating} (${currentProduct.reviews} отзывов)</span>
-                </div>
-                <div class="pd-price-block">
-                    <span class="pd-price">${currentProduct.price} ₽</span>
-                    <span class="pd-price-unit">за 1 кг</span>
-                </div>
+                <div class="pd-rating"><span class="pd-stars">${getStarsHtml(currentProduct.rating)}</span><span>${currentProduct.rating} (${currentProduct.reviews} отзывов)</span></div>
+                <div class="pd-price-block"><span class="pd-price">${currentProduct.price} ₽</span><span class="pd-price-unit">за 1 кг</span></div>
                 <p class="pd-desc">${currentProduct.fullDesc}</p>
-                
                 <div class="pd-section-title">Выберите вес:</div>
-                <div class="pd-quick-weights">
-                    ${[0.5, 1, 2, 3, 5].map(w => `<button class="pd-quick-weight ${w===0.5?'active':''}" onclick="setModalWeight(${w}, this)">${w} кг</button>`).join('')}
-                </div>
+                <div class="pd-quick-weights">${[0.5,1,2,3,5].map(w=>`<button class="pd-quick-weight ${w===0.5?'active':''}" onclick="setModalWeight(${w},this)">${w} кг</button>`).join('')}</div>
                 <div class="pd-weight-selector">
                     <span class="pd-weight-label">Вес:</span>
                     <div class="pd-weight-controls">
@@ -185,379 +151,86 @@ function openProductModal(productId) {
                         <button class="pd-weight-btn" onclick="adjustModalWeight(0.1)">+</button>
                     </div>
                     <span class="pd-weight-unit">кг</span>
-                    <span class="pd-weight-total" id="pdWeightTotal">${(currentProduct.price * 0.5).toLocaleString('ru-RU')} ₽</span>
+                    <span class="pd-weight-total" id="pdWeightTotal">${(currentProduct.price*0.5).toLocaleString('ru-RU')} ₽</span>
                 </div>
-
                 <div class="pd-actions">
                     <button class="pd-add-btn" onclick="addFromModal(this)">Добавить в корзину</button>
-                    <button class="pd-fav-btn ${isFav?'active':''}" onclick="toggleFavorite(${currentProduct.id}, this)">${isFav?'❤️':'🤍'}</button>
+                    <button class="pd-fav-btn ${isFav?'active':''}" onclick="toggleFavorite(${currentProduct.id},this)">${isFav?'❤️':'🤍'}</button>
                 </div>
-
-                <div class="pd-features">
-                    ${Object.entries(currentProduct.specs).slice(0,4).map(([k,v]) => 
-                        `<div class="pd-feature"><strong>${k}</strong>${v}</div>`
-                    ).join('')}
-                </div>
-
+                <div class="pd-features">${Object.entries(currentProduct.specs).slice(0,4).map(([k,v])=>`<div class="pd-feature"><strong>${k}</strong>${v}</div>`).join('')}</div>
                 <div class="pd-tabs">
                     <div class="pd-tab-headers">
-                        <button class="pd-tab-header active" onclick="switchModalTab('specs', this)">Характеристики</button>
-                        <button class="pd-tab-header" onclick="switchModalTab('care', this)">Уход</button>
+                        <button class="pd-tab-header active" onclick="switchModalTab('specs',this)">Характеристики</button>
+                        <button class="pd-tab-header" onclick="switchModalTab('care',this)">Уход</button>
                     </div>
-                    <div class="pd-tab-content active" id="tab-specs">
-                        <table class="pd-specs-table">
-                            ${Object.entries(currentProduct.specs).map(([k,v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
-                        </table>
-                    </div>
-                    <div class="pd-tab-content" id="tab-care">
-                        <ul class="pd-care-list">
-                            ${currentProduct.care.map(item => `<li>${item}</li>`).join('')}
-                        </ul>
-                    </div>
+                    <div class="pd-tab-content active" id="tab-specs"><table class="pd-specs-table">${Object.entries(currentProduct.specs).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}</table></div>
+                    <div class="pd-tab-content" id="tab-care"><ul class="pd-care-list">${currentProduct.care.map(item=>`<li>${item}</li>`).join('')}</ul></div>
                 </div>
             </div>
-        </div>
-    `;
-    
+        </div>`;
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
     updateModalWeightTotal();
 }
 
-function closeProductModal() {
-    const modal = document.getElementById('productModal');
-    if (modal) {
-        modal.classList.remove('open');
-        document.body.style.overflow = '';
-        currentProduct = null;
-    }
-}
+function closeProductModal() { const m=document.getElementById('productModal'); if(m){m.classList.remove('open');document.body.style.overflow='';currentProduct=null;} }
+function changeModalImage(src,thumb){document.getElementById('pdMainImage').src=src;document.querySelectorAll('.pd-thumb').forEach(t=>t.classList.remove('active'));thumb.classList.add('active');}
+function setModalWeight(w,btn){document.getElementById('pdWeight').value=w;document.querySelectorAll('.pd-quick-weight').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateModalWeightTotal();}
+function adjustModalWeight(delta){const i=document.getElementById('pdWeight');let v=Math.max(0.1,Math.min(50,parseFloat(i.value)+delta));i.value=v.toFixed(1);document.querySelectorAll('.pd-quick-weight').forEach(b=>b.classList.remove('active'));updateModalWeightTotal();}
+function updateModalWeightTotal(){if(!currentProduct)return;const w=parseFloat(document.getElementById('pdWeight').value)||0.1;document.getElementById('pdWeightTotal').textContent=(currentProduct.price*w).toLocaleString('ru-RU')+' ₽';}
+function addFromModal(btn){if(!currentProduct)return;const w=parseFloat(document.getElementById('pdWeight').value)||0.5;const ex=cart.find(x=>x.id===currentProduct.id);if(ex){ex.qty+=w;}else{cart.push({id:currentProduct.id,name:currentProduct.name,price:currentProduct.price,image:currentProduct.image,qty:parseFloat(w.toFixed(1))});}saveCart();updateCartUI();showToast(`${currentProduct.name} (${w} кг) добавлен`);btn.classList.add('added');btn.textContent='Добавлено!';setTimeout(()=>{btn.classList.remove('added');btn.textContent='Добавить в корзину';},1500);}
+function switchModalTab(id,btn){document.querySelectorAll('.pd-tab-content').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.pd-tab-header').forEach(h=>h.classList.remove('active'));document.getElementById('tab-'+id).classList.add('active');btn.classList.add('active');}
+function getStarsHtml(r){const f=Math.floor(r),h=r%1>=0.5?1:0;return'★'.repeat(f)+(h?'½':'')+'☆'.repeat(5-f-h);}
 
-function changeModalImage(src, thumb) {
-    document.getElementById('pdMainImage').src = src;
-    document.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
-    thumb.classList.add('active');
-}
-
-function setModalWeight(weight, btn) {
-    document.getElementById('pdWeight').value = weight;
-    document.querySelectorAll('.pd-quick-weight').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    updateModalWeightTotal();
-}
-
-function adjustModalWeight(delta) {
-    const input = document.getElementById('pdWeight');
-    let val = parseFloat(input.value) + delta;
-    val = Math.max(0.1, Math.min(50, val));
-    input.value = val.toFixed(1);
-    document.querySelectorAll('.pd-quick-weight').forEach(b => b.classList.remove('active'));
-    updateModalWeightTotal();
-}
-
-function updateModalWeightTotal() {
-    if (!currentProduct) return;
-    const weight = parseFloat(document.getElementById('pdWeight').value) || 0.1;
-    const total = (currentProduct.price * weight).toLocaleString('ru-RU');
-    document.getElementById('pdWeightTotal').textContent = total + ' ₽';
-}
-
-function addFromModal(btn) {
-    if (!currentProduct) return;
-    const weight = parseFloat(document.getElementById('pdWeight').value) || 0.5;
-    
-    const existingItem = cart.find(item => item.id === currentProduct.id);
-    if (existingItem) {
-        existingItem.qty += weight;
-    } else {
-        cart.push({
-            id: currentProduct.id,
-            name: currentProduct.name,
-            price: currentProduct.price,
-            image: currentProduct.image,
-            qty: parseFloat(weight.toFixed(1))
-        });
-    }
-    
-    saveCart();
-    updateCartUI();
-    showToast(`${currentProduct.name} (${weight} кг) добавлен в корзину`);
-    
-    btn.classList.add('added');
-    btn.textContent = 'Добавлено!';
-    setTimeout(() => {
-        btn.classList.remove('added');
-        btn.textContent = 'Добавить в корзину';
-    }, 1500);
-}
-
-function switchModalTab(tabId, btn) {
-    document.querySelectorAll('.pd-tab-content').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.pd-tab-header').forEach(h => h.classList.remove('active'));
-    document.getElementById('tab-' + tabId).classList.add('active');
-    btn.classList.add('active');
-}
-
-function getStarsHtml(rating) {
-    const full = Math.floor(rating);
-    const half = rating % 1 >= 0.5 ? 1 : 0;
-    return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(5 - full - half);
-}
-
-// ===== QUICK ADD =====
-function quickAddToCart(productId, btn) {
-    const product = products.find(p => p.id === productId);
-    const existingItem = cart.find(item => item.id === productId);
-    
-    if (existingItem) {
-        existingItem.qty += 0.5;
-    } else {
-        cart.push({ id: product.id, name: product.name, price: product.price, image: product.image, qty: 0.5 });
-    }
-    
-    saveCart();
-    updateCartUI();
-    showToast(`${product.name} добавлен в корзину`);
-    
-    btn.classList.add('added');
-    btn.textContent = '✓';
-    setTimeout(() => {
-        btn.classList.remove('added');
-        btn.textContent = '+ В корзину';
-    }, 1000);
-}
-
-// ===== FAVORITES =====
-function toggleFavorite(productId, btn) {
-    const index = favorites.indexOf(productId);
-    if (index > -1) {
-        favorites.splice(index, 1);
-        btn.classList.remove('active');
-        btn.innerHTML = '🤍';
-        showToast('Удалено из избранного');
-    } else {
-        favorites.push(productId);
-        btn.classList.add('active');
-        btn.innerHTML = '❤️';
-        showToast('Добавлено в избранное');
-    }
-    localStorage.setItem('lv_favs', JSON.stringify(favorites));
-}
+// ===== QUICK ADD & FAVORITES =====
+function quickAddToCart(id,btn){const p=products.find(x=>x.id===id),ex=cart.find(x=>x.id===id);if(ex){ex.qty+=0.5;}else{cart.push({id:p.id,name:p.name,price:p.price,image:p.image,qty:0.5});}saveCart();updateCartUI();showToast(`${p.name} добавлен`);btn.classList.add('added');btn.textContent='✓';setTimeout(()=>{btn.classList.remove('added');btn.textContent='+ В корзину';},1000);}
+function toggleFavorite(id,btn){const i=favorites.indexOf(id);if(i>-1){favorites.splice(i,1);btn.classList.remove('active');btn.innerHTML='🤍';showToast('Удалено из избранного');}else{favorites.push(id);btn.classList.add('active');btn.innerHTML='❤️';showToast('Добавлено в избранное');}localStorage.setItem('lv_favs',JSON.stringify(favorites));}
 
 // ===== CART =====
-function saveCart() { localStorage.setItem('lv_cart', JSON.stringify(cart)); }
-function getCartTotal() { return cart.reduce((sum, item) => sum + item.price * item.qty, 0); }
-function getCartCount() { return cart.reduce((sum, item) => sum + item.qty, 0); }
-
-function updateCartUI() {
-    const badge = document.getElementById('cartBadge');
-    if (!badge) return;
-    const count = Math.round(getCartCount() * 10) / 10;
-    if (count > 0) {
-        badge.style.display = 'flex';
-        badge.textContent = count;
-    } else {
-        badge.style.display = 'none';
-    }
-}
-
-function toggleCart() {
-    const overlay = document.getElementById('cartOverlay');
-    const sidebar = document.getElementById('cartSidebar');
-    if (!overlay || !sidebar) return;
-
-    const isOpen = sidebar.classList.contains('open');
-    if (isOpen) {
-        overlay.classList.remove('open');
-        sidebar.classList.remove('open');
-        document.body.style.overflow = '';
-    } else {
-        renderCartItems();
-        overlay.classList.add('open');
-        sidebar.classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-function renderCartItems() {
-    const container = document.getElementById('cartItems');
-    const footer = document.getElementById('cartFooter');
-    const totalEl = document.getElementById('cartTotal');
-    if (!container) return;
-
-    if (cart.length === 0) {
-        container.innerHTML = '<div class="cart-empty"><div class="cart-empty-icon">🛒</div><h3>Корзина пуста</h3><p>Добавьте ткани из каталога</p></div>';
-        footer.style.display = 'none';
-        return;
-    }
-
-    container.innerHTML = cart.map(item => `
-        <div class="cart-item">
-            <img src="${item.image}" alt="${item.name}" class="cart-item-image">
-            <div class="cart-item-info">
-                <div class="cart-item-name">${item.name}</div>
-                <div class="cart-item-price">${(item.price * item.qty).toLocaleString('ru-RU')} ₽</div>
-                <div class="cart-item-controls">
-                    <button class="qty-btn" onclick="updateQty(${item.id}, -0.1)">−</button>
-                    <span class="qty-value">${item.qty.toFixed(1)} кг</span>
-                    <button class="qty-btn" onclick="updateQty(${item.id}, 0.1)">+</button>
-                </div>
-            </div>
-            <button class="cart-item-remove" onclick="removeFromCart(${item.id})">✕</button>
-        </div>
-    `).join('');
-
-    footer.style.display = 'block';
-    totalEl.textContent = getCartTotal().toLocaleString('ru-RU') + ' ₽';
-}
-
-function removeFromCart(productId) {
-    cart = cart.filter(item => item.id !== productId);
-    saveCart();
-    updateCartUI();
-    renderCartItems();
-}
-
-function updateQty(productId, delta) {
-    const item = cart.find(i => i.id === productId);
-    if (item) {
-        item.qty = Math.max(0.1, parseFloat((item.qty + delta).toFixed(1)));
-        if (item.qty <= 0) { removeFromCart(productId); return; }
-    }
-    saveCart();
-    updateCartUI();
-    renderCartItems();
-}
+function saveCart(){localStorage.setItem('lv_cart',JSON.stringify(cart));}
+function getCartTotal(){return cart.reduce((s,i)=>s+i.price*i.qty,0);}
+function getCartCount(){return cart.reduce((s,i)=>s+i.qty,0);}
+function updateCartUI(){const b=document.getElementById('cartBadge');if(!b)return;const c=Math.round(getCartCount()*10)/10;if(c>0){b.style.display='flex';b.textContent=c;}else{b.style.display='none';}}
+function toggleCart(){const o=document.getElementById('cartOverlay'),s=document.getElementById('cartSidebar');if(!o||!s)return;const open=s.classList.contains('open');if(open){o.classList.remove('open');s.classList.remove('open');document.body.style.overflow='';}else{renderCartItems();o.classList.add('open');s.classList.add('open');document.body.style.overflow='hidden';}}
+function renderCartItems(){const c=document.getElementById('cartItems'),f=document.getElementById('cartFooter'),t=document.getElementById('cartTotal');if(!c)return;if(cart.length===0){c.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">🛒</div><h3>Корзина пуста</h3><p>Добавьте ткани из каталога</p></div>';f.style.display='none';return;}c.innerHTML=cart.map(i=>`<div class="cart-item"><img src="${i.image}" class="cart-item-image"><div class="cart-item-info"><div class="cart-item-name">${i.name}</div><div class="cart-item-price">${(i.price*i.qty).toLocaleString('ru-RU')} ₽</div><div class="cart-item-controls"><button class="qty-btn" onclick="updateQty(${i.id},-0.1)">−</button><span class="qty-value">${i.qty.toFixed(1)} кг</span><button class="qty-btn" onclick="updateQty(${i.id},0.1)">+</button></div></div><button class="cart-item-remove" onclick="removeFromCart(${i.id})">✕</button></div>`).join('');f.style.display='block';t.textContent=getCartTotal().toLocaleString('ru-RU')+' ₽';}
+function removeFromCart(id){cart=cart.filter(i=>i.id!==id);saveCart();updateCartUI();renderCartItems();}
+function updateQty(id,delta){const i=cart.find(x=>x.id===id);if(i){i.qty=Math.max(0.1,parseFloat((i.qty+delta).toFixed(1)));if(i.qty<=0){removeFromCart(id);return;}}saveCart();updateCartUI();renderCartItems();}
 
 // ===== CHECKOUT =====
-function openCheckout() {
-    if (cart.length === 0) return;
-    toggleCart();
-    setTimeout(() => {
-        const summary = document.getElementById('orderSummary');
-        if (summary) {
-            summary.innerHTML = `
-                <h4>Ваш заказ:</h4>
-                ${cart.map(item => `<div class="order-summary-item"><span>${item.name} × ${item.qty.toFixed(1)} кг</span><span>${(item.price * item.qty).toLocaleString('ru-RU')} ₽</span></div>`).join('')}
-                <div class="order-summary-total"><span>Итого:</span><span>${getCartTotal().toLocaleString('ru-RU')} ₽</span></div>
-            `;
-        }
-        const modal = document.getElementById('checkoutModal');
-        if (modal) {
-            modal.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        }
-    }, 200);
-}
+function openCheckout(){if(cart.length===0)return;toggleCart();setTimeout(()=>{const s=document.getElementById('orderSummary');if(s){s.innerHTML=`<h4>Ваш заказ:</h4>${cart.map(i=>`<div class="order-summary-item"><span>${i.name} × ${i.qty.toFixed(1)} кг</span><span>${(i.price*i.qty).toLocaleString('ru-RU')} ₽</span></div>`).join('')}<div class="order-summary-total"><span>Итого:</span><span>${getCartTotal().toLocaleString('ru-RU')} ₽</span></div>`;}const m=document.getElementById('checkoutModal');if(m){m.classList.add('open');document.body.style.overflow='hidden';}},200);}
+function closeCheckout(){const m=document.getElementById('checkoutModal');if(m){m.classList.remove('open');document.body.style.overflow='';const f=document.getElementById('orderForm');if(f){f.style.display='';f.reset();}}}
+function submitOrder(e){e.preventDefault();const order={customer:{name:document.getElementById('customerName').value,phone:document.getElementById('customerPhone').value,email:document.getElementById('customerEmail').value,city:document.getElementById('customerCity').value,address:document.getElementById('customerAddress').value,comment:document.getElementById('customerComment').value},items:[...cart],total:getCartTotal()};const orders=JSON.parse(localStorage.getItem('lv_orders')||'[]');order.id=Date.now();order.date=new Date().toLocaleString('ru-RU');order.status='new';orders.unshift(order);localStorage.setItem('lv_orders',JSON.stringify(orders));const b=document.getElementById('checkoutBody');if(b){b.innerHTML=`<div class="success-message"><div class="success-icon">✓</div><h3>Заказ оформлен!</h3><p>Номер заказа: #${order.id.toString().slice(-6)}</p><p style="margin-top:12px;">Мы свяжемся с вами в ближайшее время.</p><button class="btn-primary" style="margin-top:20px;" onclick="closeCheckout();location.reload();">Отлично!</button></div>`;}cart=[];saveCart();updateCartUI();showToast('Заказ успешно оформлен!');}
 
-function closeCheckout() {
-    const modal = document.getElementById('checkoutModal');
-    if (modal) {
-        modal.classList.remove('open');
-        document.body.style.overflow = '';
-        const form = document.getElementById('orderForm');
-        if (form) {
-            form.style.display = '';
-            form.reset();
-        }
-    }
-}
+// ===== ADMIN AUTH (ПРОСТОЙ ВХОД - БЕЗ ПРОВЕРОК) =====
 
-function submitOrder(event) {
+// Закрыть окно входа
+function closeAuthModal(){const m=document.getElementById('authModal');if(m){m.classList.remove('open');document.body.style.overflow='';const li=document.getElementById('loginUsername'),pi=document.getElementById('loginPassword'),err=document.getElementById('loginError');if(li)li.value='';if(pi)pi.value='';if(err)err.style.display='none';}}
+
+// Открыть окно входа
+function openLoginModal(){const m=document.getElementById('authModal');if(m){m.classList.add('open');document.body.style.overflow='hidden';}}
+
+// Обработка входа - просто проверяет пароль и перекидывает
+function handleAdminLogin(event){
     event.preventDefault();
-    const order = {
-        customer: {
-            name: document.getElementById('customerName').value,
-            phone: document.getElementById('customerPhone').value,
-            email: document.getElementById('customerEmail').value,
-            city: document.getElementById('customerCity').value,
-            address: document.getElementById('customerAddress').value,
-            comment: document.getElementById('customerComment').value
-        },
-        items: [...cart],
-        total: getCartTotal()
-    };
-
-    const orders = JSON.parse(localStorage.getItem('lv_orders') || '[]');
-    order.id = Date.now();
-    order.date = new Date().toLocaleString('ru-RU');
-    order.status = 'new';
-    orders.unshift(order);
-    localStorage.setItem('lv_orders', JSON.stringify(orders));
-
-    const body = document.getElementById('checkoutBody');
-    if (body) {
-        body.innerHTML = `
-            <div class="success-message">
-                <div class="success-icon">✓</div>
-                <h3>Заказ оформлен!</h3>
-                <p>Номер заказа: #${order.id.toString().slice(-6)}</p>
-                <p style="margin-top:12px;">Мы свяжемся с вами в ближайшее время.</p>
-                <button class="btn-primary" style="margin-top:20px;" onclick="closeCheckout(); location.reload();">Отлично!</button>
-            </div>
-        `;
-    }
-
-    cart = [];
-    saveCart();
-    updateCartUI();
-    showToast('Заказ успешно оформлен!');
-}
-
-// ===== ADMIN AUTH (ПРОСТОЙ ВХОД) =====
-
-// Функция входа (вызывается из модального окна)
-function handleAdminLogin(event) {
-    event.preventDefault();
-    
     const loginInput = document.getElementById('loginUsername');
     const passInput = document.getElementById('loginPassword');
     const errorMsg = document.getElementById('loginError');
-
-    // НАСТРОЙКИ ДОСТУПА
-    const ADMIN_LOGIN = 'admin';
-    const ADMIN_PASS = 'admin123';
-
-    if (loginInput.value === ADMIN_LOGIN && passInput.value === ADMIN_PASS) {
-        // Сохраняем флаг входа в сессию
-        sessionStorage.setItem('admin_logged_in', 'true');
-        
-        // Закрываем модалку
+    
+    // ЛОГИН И ПАРОЛЬ
+    if (loginInput.value === 'admin' && passInput.value === 'admin123') {
         closeAuthModal();
-        
-        // Перебрасываем на страницу админки
-        window.location.href = 'admin.html';
+        window.location.href = 'admin.html'; // Просто перекидываем на админку
     } else {
-        if (errorMsg) {
-            errorMsg.style.display = 'block';
-            errorMsg.textContent = 'Неверный логин или пароль';
-        } else {
-            alert('Неверный логин или пароль');
-        }
+        if (errorMsg) { errorMsg.style.display = 'block'; errorMsg.textContent = 'Неверный логин или пароль'; }
+        else { alert('Неверный логин или пароль'); }
     }
 }
 
-// Проверка авторизации (для страницы admin.html)
-function checkAdminAuth() {
-    if (sessionStorage.getItem('admin_logged_in') !== 'true') {
-        // Если не вошел - выкидываем на главную или показываем вход
-        // Для простоты - редирект на главную, где можно нажать "Админ"
-        window.location.href = 'index.html';
-        return false;
-    }
-    return true;
-}
+// Выход из админки (просто редирект на главную)
+function logoutAdmin() { window.location.href = 'index.html'; }
 
-function logoutAdmin() {
-    sessionStorage.removeItem('admin_logged_in');
-    window.location.href = 'index.html';
-}
-
-// ===== ADMIN PANEL LOGIC =====
+// ===== ADMIN PANEL LOGIC (БЕЗ ПРОВЕРКИ АВТОРИЗАЦИИ) =====
 function renderAdminPanel() {
-    // Сначала проверяем, авторизован ли пользователь
-    if (!checkAdminAuth()) return;
-
     const orders = JSON.parse(localStorage.getItem('lv_orders') || '[]');
     const totalRevenue = orders.reduce((sum, o) => sum + o.total, 0);
     const newOrders = orders.filter(o => o.status === 'new').length;
@@ -574,7 +247,6 @@ function renderAdminPanel() {
     const tbody = document.getElementById('ordersBody');
     const noOrders = document.getElementById('noOrders');
     const table = document.getElementById('ordersTable');
-
     if (!tbody || !table || !noOrders) return;
 
     if (orders.length === 0) {
@@ -592,108 +264,23 @@ function renderAdminPanel() {
                 <td>${order.customer.phone}</td>
                 <td title="${itemsText}">${itemsText.length > 25 ? itemsText.slice(0, 25) + '...' : itemsText}</td>
                 <td><strong>${order.total.toLocaleString('ru-RU')} ₽</strong></td>
-                <td>
-                    <select class="form-input" style="padding:4px 8px;font-size:12px;width:auto;" onchange="updateOrderStatus(${order.id}, this.value)">
-                        <option value="new" ${order.status==='new'?'selected':''}>Новый</option>
-                        <option value="processing" ${order.status==='processing'?'selected':''}>В работе</option>
-                        <option value="completed" ${order.status==='completed'?'selected':''}>Завершён</option>
-                    </select>
-                </td>
+                <td><select class="form-input" style="padding:4px 8px;font-size:12px;width:auto;" onchange="updateOrderStatus(${order.id}, this.value)"><option value="new" ${order.status==='new'?'selected':''}>Новый</option><option value="processing" ${order.status==='processing'?'selected':''}>В работе</option><option value="completed" ${order.status==='completed'?'selected':''}>Завершён</option></select></td>
                 <td><button class="delete-order-btn" onclick="if(confirm('Удалить заказ?')) deleteOrder(${order.id})">Удалить</button></td>
             </tr>`;
         }).join('');
     }
 }
 
-function updateOrderStatus(id, status) {
-    const orders = JSON.parse(localStorage.getItem('lv_orders') || '[]');
-    const order = orders.find(o => o.id === id);
-    if (order) { 
-        order.status = status; 
-        localStorage.setItem('lv_orders', JSON.stringify(orders)); 
-        showToast('Статус обновлен');
-    }
-}
-
-function deleteOrder(id) {
-    let orders = JSON.parse(localStorage.getItem('lv_orders') || '[]');
-    orders = orders.filter(o => o.id !== id);
-    localStorage.setItem('lv_orders', JSON.stringify(orders));
-    renderAdminPanel();
-    showToast('Заказ удалён');
-}
-
-function exportOrders() {
-    const orders = JSON.parse(localStorage.getItem('lv_orders') || '[]');
-    if (orders.length === 0) { showToast('Нет заказов для экспорта'); return; }
-    
-    let csv = 'Номер,Дата,Имя,Телефон,Город,Товары,Сумма,Статус\n';
-    orders.forEach(order => {
-        const itemsText = order.items.map(i => `${i.name} (${i.qty.toFixed(1)}кг)`).join('; ');
-        const statusText = { 'new': 'Новый', 'processing': 'В обработке', 'completed': 'Завершён' }[order.status];
-        csv += `#${order.id.toString().slice(-6)},${order.date},"${order.customer.name}","${order.customer.phone}","${order.customer.city}","${itemsText}",${order.total},${statusText}\n`;
-    });
-    
-    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `orders_${new Date().toISOString().slice(0,10)}.csv`;
-    a.click();
-    showToast('Заказы экспортированы');
-}
-
-function clearAllOrders() {
-    if (confirm('Удалить ВСЕ заказы? Это действие нельзя отменить.')) {
-        localStorage.setItem('lv_orders', JSON.stringify([]));
-        renderAdminPanel();
-        showToast('Все заказы удалены');
-    }
-}
+function updateOrderStatus(id, status) { const orders = JSON.parse(localStorage.getItem('lv_orders') || '[]'); const order = orders.find(o => o.id === id); if (order) { order.status = status; localStorage.setItem('lv_orders', JSON.stringify(orders)); showToast('Статус обновлен'); } }
+function deleteOrder(id) { let orders = JSON.parse(localStorage.getItem('lv_orders') || '[]'); orders = orders.filter(o => o.id !== id); localStorage.setItem('lv_orders', JSON.stringify(orders)); renderAdminPanel(); showToast('Заказ удалён'); }
+function exportOrders() { const orders = JSON.parse(localStorage.getItem('lv_orders') || '[]'); if (orders.length === 0) { showToast('Нет заказов для экспорта'); return; } let csv = 'Номер,Дата,Имя,Телефон,Город,Товары,Сумма,Статус\n'; orders.forEach(order => { const itemsText = order.items.map(i => `${i.name} (${i.qty.toFixed(1)}кг)`).join('; '); const statusText = { 'new': 'Новый', 'processing': 'В обработке', 'completed': 'Завершён' }[order.status]; csv += `#${order.id.toString().slice(-6)},${order.date},"${order.customer.name}","${order.customer.phone}","${order.customer.city}","${itemsText}",${order.total},${statusText}\n`; }); const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `orders_${new Date().toISOString().slice(0,10)}.csv`; a.click(); showToast('Заказы экспортированы'); }
+function clearAllOrders() { if (confirm('Удалить ВСЕ заказы?')) { localStorage.setItem('lv_orders', JSON.stringify([])); renderAdminPanel(); showToast('Все заказы удалены'); } }
 
 // ===== UTILS =====
-function showToast(message) {
-    const container = document.getElementById('toastContainer');
-    if (!container) return;
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.textContent = message;
-    container.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
-
-function setupPhoneInput() {
-    const phoneInput = document.getElementById('customerPhone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 0) {
-                if (value[0] === '7' || value[0] === '8') value = value.substring(1);
-                let formatted = '+7';
-                if (value.length > 0) formatted += ' (' + value.substring(0, 3);
-                if (value.length >= 3) formatted += ') ' + value.substring(3, 6);
-                if (value.length >= 6) formatted += '-' + value.substring(6, 8);
-                if (value.length >= 8) formatted += '-' + value.substring(8, 10);
-                e.target.value = formatted;
-            }
-        });
-    }
-}
+function showToast(message) { const c = document.getElementById('toastContainer'); if (!c) return; const t = document.createElement('div'); t.className = 'toast'; t.textContent = message; c.appendChild(t); setTimeout(() => t.remove(), 3000); }
+function setupPhoneInput() { const p = document.getElementById('customerPhone'); if (p) { p.addEventListener('input', function(e) { let v = e.target.value.replace(/\D/g, ''); if (v.length > 0) { if (v[0] === '7' || v[0] === '8') v = v.substring(1); let f = '+7'; if (v.length > 0) f += ' (' + v.substring(0, 3); if (v.length >= 3) f += ') ' + v.substring(3, 6); if (v.length >= 6) f += '-' + v.substring(6, 8); if (v.length >= 8) f += '-' + v.substring(8, 10); e.target.value = f; } }); } }
 
 // ===== START =====
 document.addEventListener('DOMContentLoaded', init);
-
-// Закрытие модалок по клику вне
-document.addEventListener('click', (e) => {
-    if (e.target.id === 'productModal') closeProductModal();
-    if (e.target.id === 'checkoutModal') closeCheckout();
-    if (e.target.id === 'authModal') closeAuthModal();
-});
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeProductModal();
-        closeCheckout();
-        closeAuthModal();
-        if (document.getElementById('cartSidebar')?.classList.contains('open')) toggleCart();
-    }
-});
+document.addEventListener('click', (e) => { if (e.target.id === 'productModal') closeProductModal(); if (e.target.id === 'checkoutModal') closeCheckout(); if (e.target.id === 'authModal') closeAuthModal(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeProductModal(); closeCheckout(); closeAuthModal(); if (document.getElementById('cartSidebar')?.classList.contains('open')) toggleCart(); } });
