@@ -6,12 +6,11 @@
     <title>Лоскут Весовой — Ткани на любой вкус</title>
     <link href="https://cdn.jsdelivr.net/npm/@fontsource/open-sans@4.5.14/index.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@fontsource/montserrat@4.5.14/index.min.css" rel="stylesheet">
-    <!-- ИСПРАВЛЕНО: путь к CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- Header -->
+<!-- Header (без кнопки Админ) -->
 <header class="header" id="header">
     <div class="header-inner">
         <a href="#" class="logo" onclick="showPage('catalog')">
@@ -21,8 +20,7 @@
         <nav class="nav">
             <a href="index.html" class="nav-link active">Каталог</a>
             <a href="about.html" class="nav-link">О нас</a>
-            <!-- ДОБАВЛЕНО: Кнопка Админ, которая открывает попап -->
-            <button class="nav-link" onclick="openLoginModal()">Админ</button>
+            <!-- Кнопка Админ убрана отсюда -->
             <button class="cart-btn" onclick="toggleCart()">
                 Корзина
                 <span class="cart-badge" id="cartBadge" style="display:none">0</span>
@@ -89,7 +87,7 @@
     </section>
 </div>
 
-<!-- Footer -->
+<!-- Footer (ссылка Админ-панель теперь открывает попап) -->
 <footer class="footer" id="footer">
     <div class="footer-inner">
         <div class="footer-brand">
@@ -106,7 +104,8 @@
         <div class="footer-col">
             <h4>Информация</h4>
             <a href="about.html">О нас</a>
-            <a href="admin.html">Админ-панель</a>
+            <!-- ИСПРАВЛЕНО: ссылка теперь открывает попап входа -->
+            <a onclick="openLoginModal(); return false;">Админ-панель</a>
         </div>
         <div class="footer-col">
             <h4>Контакты</h4>
@@ -215,7 +214,6 @@
 <!-- Toast Notifications -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- ИСПРАВЛЕНО: путь к JS -->
 <script src="script.js"></script>
 </body>
 </html>
